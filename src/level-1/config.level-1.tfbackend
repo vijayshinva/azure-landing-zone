@@ -1,3 +1,2 @@
-# storage_account_name = "tfstatelevel0"
 container_name       = "tfstate-level-1"
 key                  = "prod.level-1.tfstate"
