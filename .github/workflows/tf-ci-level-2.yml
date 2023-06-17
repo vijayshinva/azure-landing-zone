@@ -1,4 +1,4 @@
-name: 'Terraform CI'
+name: 'Level 2 CI'
 
 on:
   push:

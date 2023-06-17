@@ -28,7 +28,9 @@ module "caf-enterprise-scale" {
   version = ">= 1.5.0"
 
   providers = {
-    azurerm = azurerm
+    azurerm              = azurerm
+    azurerm.connectivity = azurerm
+    azurerm.management   = azurerm
   }
 
   # Base module configuration settings

@@ -1,12 +1,12 @@
-name: 'Terraform CI'
+name: 'Level 3 CI'
 
 on:
   push:
     paths:
-      - 'src/level-0/**'
+      - 'src/level-3/**'
 
 env:
-    working-directory: 'src/level-0'
+    working-directory: 'src/level-3'
 
 jobs:
   terraform-unit-tests:

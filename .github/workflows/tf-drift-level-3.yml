@@ -1,13 +1,15 @@
-name: 'Terraform CD'
+name: 'Level 3 Configuration Drift Detection'
 
 on:
-    workflow_dispatch
+  workflow_dispatch: 
+  schedule:
+    - cron: '41 3 * * *' # runs nightly at 3:41 am
 
 #Special permissions required for OIDC authentication
 permissions:
   id-token: write
   contents: read
-  pull-requests: write
+  issues: write
 
 #These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
 env:
@@ -19,7 +21,7 @@ env:
   TFSTATE_STORAGE_ACCOUNT_NAME: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME }}"
   TFSTATE_STORAGE_ACCOUNT_KEY: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_KEY }}"
   TFSTATE_CONTAINER_NAME: "${{ secrets.TFSTATE_CONTAINER_NAME }}"
-  working-directory: 'src/level-0'
+  working-directory: 'src/level-3'
 
 jobs:
   terraform-plan:
@@ -36,11 +38,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    # Install the latest version of Helm CLI
-    - name: Set up Helm
-      uses: azure/setup-helm@v3
-    
-      # Install the latest version of the Terraform CLI
+    # Install the latest version of the Terraform CLI
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
@@ -49,11 +47,6 @@ jobs:
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform -chdir=${{env.working-directory}} init -backend-config=resource_group_name="${{env.TFSTATE_RESOURCE_GROUP_NAME}}" -backend-config=storage_account_name="${{env.TFSTATE_STORAGE_ACCOUNT_NAME}}" -backend-config=container_name="${{env.TFSTATE_CONTAINER_NAME}}" -backend-config=access_key="${{env.TFSTATE_STORAGE_ACCOUNT_KEY}}"
-    
-      # Checks that all Terraform configuration files adhere to a canonical format
-    # Will fail the build if not
-    - name: Terraform Format
-      run: terraform -chdir=${{env.working-directory}} fmt -check
 
     # Generates an execution plan for Terraform
     # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
@@ -62,7 +55,7 @@ jobs:
       run: |
         export exitcode=0
         terraform -chdir=${{env.working-directory}} plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
-
+        
         echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
         
         if [ $exitcode -eq 1 ]; then
@@ -77,8 +70,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tfplan
-        path: ${{env.working-directory}}/tfplan
-        
+        path: tfplan
         
     # Create string output of Terraform Plan
     - name: Create String Output
@@ -103,10 +95,10 @@ jobs:
         SUMMARY: ${{ steps.tf-plan-string.outputs.summary }}
       run: |
         echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
-      
-    # If this is a PR post the changes
-    - name: Push Terraform Output to PR
-      if: github.ref != 'refs/heads/main'
+
+    # If changes are detected, create a new issue
+    - name: Publish Drift Report
+      if: steps.tf-plan.outputs.exitcode == 2
       uses: actions/github-script@v6
       env:
         SUMMARY: "${{ steps.tf-plan-string.outputs.summary }}"
@@ -114,40 +106,75 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const body = `${process.env.SUMMARY}`;
-            github.rest.issues.createComment({
-                issue_number: context.issue.number,
+            const title = 'Terraform Configuration Drift Detected';
+            const creator = 'github-actions[bot]'
+          
+            // Look to see if there is an existing drift issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              creator: creator,
+              title: title
+            })
+              
+            if( issues.data.length > 0 ) {
+              // We assume there shouldn't be more than 1 open issue, since we update any issue we find
+              const issue = issues.data[0]
+              
+              if ( issue.body == body ) {
+                console.log('Drift Detected: Found matching issue with duplicate content')
+              } else {
+                console.log('Drift Detected: Found matching issue, updating body')
+                github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: body
+                })
+              }
+            } else {
+              console.log('Drift Detected: Creating new issue')
+
+              github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
+                title: title,
                 body: body
-            })
-                
-  terraform-apply:
-    name: 'Terraform Apply'
-    if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.tfplanExitCode == 2
-    runs-on: ubuntu-latest
-    environment: production
-    needs: [terraform-plan]
-    
-    steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform -chdir=${{env.working-directory}} init -backend-config=resource_group_name="${{env.TFSTATE_RESOURCE_GROUP_NAME}}" -backend-config=storage_account_name="${{env.TFSTATE_STORAGE_ACCOUNT_NAME}}" -backend-config=container_name="${{env.TFSTATE_CONTAINER_NAME}}" -backend-config=access_key="${{env.TFSTATE_STORAGE_ACCOUNT_KEY}}"
-
-    # Download saved plan from artifacts  
-    - name: Download Terraform Plan
-      uses: actions/download-artifact@v3
+             })
+            }
+            
+    # If changes aren't detected, close any open drift issues
+    - name: Publish Drift Report
+      if: steps.tf-plan.outputs.exitcode == 0
+      uses: actions/github-script@v6
       with:
-        name: tfplan
-        path: ${{env.working-directory}}
-
-    # Terraform Apply
-    - name: Terraform Apply
-      run: terraform -chdir=${{env.working-directory}} apply -auto-approve tfplan
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const title = 'Terraform Configuration Drift Detected';
+            const creator = 'github-actions[bot]'
+          
+            // Look to see if there is an existing drift issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              creator: creator,
+              title: title
+            })
+              
+            if( issues.data.length > 0 ) {
+              const issue = issues.data[0]
+              
+              github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed'
+              })
+            } 
+             
+    # Mark the workflow as failed if drift detected 
+    - name: Error on Failure
+      if: steps.tf-plan.outputs.exitcode == 2
+      run: exit 1
