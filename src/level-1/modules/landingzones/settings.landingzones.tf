@@ -3,7 +3,7 @@ locals {
   custom_landing_zones = {
     "${var.root_id}" = {
       display_name               = "${lower(var.root_name)}"
-      parent_management_group_id = "${data.azurerm_client_config.core.tenant_id}"
+      parent_management_group_id = "${data.azurerm_client_config.current.tenant_id}"
       subscription_ids           = []
       archetype_config = {
         archetype_id   = "es_root"

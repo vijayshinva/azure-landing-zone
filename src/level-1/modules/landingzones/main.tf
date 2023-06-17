@@ -28,7 +28,7 @@ module "caf-enterprise-scale" {
   version = ">= 1.5.0"
 
   default_location = var.primary_location
-  
+
   providers = {
     azurerm              = azurerm
     azurerm.connectivity = azurerm
