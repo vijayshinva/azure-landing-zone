@@ -39,7 +39,7 @@ module "caf-enterprise-scale" {
   root_parent_id = data.azurerm_client_config.current.tenant_id
   root_id        = var.root_id
   root_name      = var.root_name
-  library_path   = "${path.root}/lib"
+  library_path   = "${path.module}/lib"
 
   # Disable creation of the core management group hierarchy
   # as this is being created by the core module instance
