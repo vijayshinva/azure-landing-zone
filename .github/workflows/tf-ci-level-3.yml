@@ -41,6 +41,7 @@ jobs:
       uses: bridgecrewio/checkov-action@master
       with: 
         framework: terraform
+        download_external_modules: true
         directory: ${{env.working-directory}}
         output_file_path: ${{env.working-directory}}/results.sarif 
 
