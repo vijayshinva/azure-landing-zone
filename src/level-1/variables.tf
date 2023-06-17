@@ -11,3 +11,15 @@ variable "root_name" {
   description = "Sets the value used for the \"intermediate root\" management group display name."
   default     = "My Organization"
 }
+
+variable "primary_location" {
+  type        = string
+  description = "Sets the location for \"primary\" resources to be created in."
+  default     = "eastus"
+}
+
+variable "secondary_location" {
+  type        = string
+  description = "Sets the location for \"secondary\" resources to be created in."
+  default     = "eastus2"
+}
