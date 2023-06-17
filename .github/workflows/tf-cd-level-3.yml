@@ -99,6 +99,7 @@ jobs:
         
     # Publish Terraform Plan as task summary
     - name: Publish Terraform Plan to Task Summary
+      continue-on-error: true # GITHUB_STEP_SUMMARY has a limit of 1MB, so this step may fail if the plan is too large
       env:
         SUMMARY: ${{ steps.tf-plan-string.outputs.summary }}
       run: |
