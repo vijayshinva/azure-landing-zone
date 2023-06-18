@@ -17,9 +17,9 @@ env:
   ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
   ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
-  TFSTATE_RESOURCE_GROUP_NAME: "${{ secrets.TFSTATE_RESOURCE_GROUP_NAME }}"
-  TFSTATE_STORAGE_ACCOUNT_NAME: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME }}"
-  TFSTATE_STORAGE_ACCOUNT_KEY: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_KEY }}"
+  TF_VAR_TFSTATE_RESOURCE_GROUP_NAME: "${{ secrets.TFSTATE_RESOURCE_GROUP_NAME }}"
+  TF_VAR_TFSTATE_STORAGE_ACCOUNT_NAME: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME }}"
+  TF_VAR_TFSTATE_STORAGE_ACCOUNT_KEY: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_KEY }}"
   working-directory: 'src/level-2'
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform -chdir=${{env.working-directory}} init -backend-config=resource_group_name="${{env.TFSTATE_RESOURCE_GROUP_NAME}}" -backend-config=storage_account_name="${{env.TFSTATE_STORAGE_ACCOUNT_NAME}}" -backend-config=access_key="${{env.TFSTATE_STORAGE_ACCOUNT_KEY}}" -backend-config=config.level-2.tfbackend
+      run: terraform -chdir=${{env.working-directory}} init -backend-config=resource_group_name="${{env.TF_VAR_TFSTATE_RESOURCE_GROUP_NAME}}" -backend-config=storage_account_name="${{env.TF_VAR_TFSTATE_STORAGE_ACCOUNT_NAME}}" -backend-config=access_key="${{env.TF_VAR_TFSTATE_STORAGE_ACCOUNT_KEY}}" -backend-config=config.level-2.tfbackend
 
     # Generates an execution plan for Terraform
     # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
