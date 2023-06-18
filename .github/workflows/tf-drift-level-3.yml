@@ -20,6 +20,9 @@ env:
   TF_VAR_TFSTATE_RESOURCE_GROUP_NAME: "${{ secrets.TFSTATE_RESOURCE_GROUP_NAME }}"
   TF_VAR_TFSTATE_STORAGE_ACCOUNT_NAME: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_NAME }}"
   TF_VAR_TFSTATE_STORAGE_ACCOUNT_KEY: "${{ secrets.TFSTATE_STORAGE_ACCOUNT_KEY }}"
+  TF_VAR_subscription_id_connectivity: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+  TF_VAR_subscription_id_identity: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+  TF_VAR_subscription_id_management: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
   working-directory: 'src/level-3'
 
 jobs:
