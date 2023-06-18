@@ -24,6 +24,24 @@ variable "secondary_location" {
   default     = "eastus2"
 }
 
+variable "subscription_id_connectivity" {
+  type        = string
+  description = "Subscription ID to use for \"connectivity\" resources."
+  default     = ""
+}
+
+variable "subscription_id_identity" {
+  type        = string
+  description = "Subscription ID to use for \"identity\" resources."
+  default     = ""
+}
+
+variable "subscription_id_management" {
+  type        = string
+  description = "Subscription ID to use for \"management\" resources."
+  default     = ""
+}
+
 variable "TFSTATE_STORAGE_ACCOUNT_KEY" {
   type    = string
   default = ""
