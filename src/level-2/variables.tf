@@ -23,3 +23,13 @@ variable "secondary_location" {
   description = "Sets the location for \"secondary\" resources to be created in."
   default     = "eastus2"
 }
+
+variable "TFSTATE_STORAGE_ACCOUNT_KEY" {
+  type    = string
+  default = ""
+}
+
+variable "TFSTATE_STORAGE_ACCOUNT_NAME" {
+  type    = string
+  default = ""
+}
