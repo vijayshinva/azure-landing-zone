@@ -2,18 +2,11 @@
 # settings from outputs via the respective terraform
 # remote state files
 
-data "terraform_remote_state" "connectivity" {
-  backend = "local"
+data "terraform_remote_state" "level-1" {
+  backend = "azurerm"
 
   config = {
-    path = "${path.module}/../connectivity/connectivity.tfstate"
-  }
-}
-
-data "terraform_remote_state" "management" {
-  backend = "local"
-
-  config = {
-    path = "${path.module}/../management/management.tfstate"
+    container_name = "tfstate-level-1"
+    key            = "prod.level-1.tfstate"
   }
 }

@@ -9,7 +9,7 @@ locals {
           config = {
             address_space                   = ["10.100.0.0/22", ]
             location                        = var.primary_location
-            link_to_ddos_protection_plan    = var.enable_ddos_protection
+            link_to_ddos_protection_plan    = true
             enable_hub_network_mesh_peering = true
           }
         },
@@ -17,7 +17,7 @@ locals {
           config = {
             address_space                   = ["10.101.0.0/22", ]
             location                        = var.secondary_location
-            link_to_ddos_protection_plan    = var.enable_ddos_protection
+            link_to_ddos_protection_plan    = true
             enable_hub_network_mesh_peering = true
           }
         },
@@ -26,7 +26,7 @@ locals {
       vwan_hub_networks = []
       # Enable DDoS protection plan in the primary location
       ddos_protection_plan = {
-        enabled = var.enable_ddos_protection
+        enabled = true
       }
       # DNS will be deployed with default settings
       dns = {}

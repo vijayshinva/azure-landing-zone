@@ -8,9 +8,6 @@ terraform {
       version = ">= 3.54.0"
     }
   }
-  backend "local" {
-    path = "./core.tfstate"
-  }
 }
 
 # Define the provider configuration
@@ -26,9 +23,11 @@ data "azurerm_client_config" "current" {}
 # Declare the Azure landing zones Terraform module
 # and provide the core configuration.
 
-module "alz" {
+module "caf-enterprise-scale" {
   source  = "Azure/caf-enterprise-scale/azurerm"
   version = ">= 1.5.0"
+
+  default_location = var.primary_location
 
   providers = {
     azurerm              = azurerm
