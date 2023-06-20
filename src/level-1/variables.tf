@@ -3,13 +3,13 @@
 variable "root_id" {
   type        = string
   description = "Sets the value used for generating unique resource naming within the module."
-  default     = "myorg"
+  default     = "zee5"
 }
 
 variable "root_name" {
   type        = string
   description = "Sets the value used for the \"intermediate root\" management group display name."
-  default     = "My Organization"
+  default     = "zee5 Enterprise"
 }
 
 variable "primary_location" {
