@@ -30,4 +30,5 @@ module "landingzones" {
   root_id          = var.root_id
   root_name        = var.root_name
   primary_location = var.primary_location
+  
 }
