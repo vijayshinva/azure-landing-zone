@@ -24,22 +24,25 @@ data "azurerm_client_config" "current" {}
 module "connectivity" {
   source = "./modules/connectivity"
 
-  root_id   = var.root_id
-  root_name = var.root_name
+  root_id                      = var.root_id
+  root_name                    = var.root_name
+  subscription_id_connectivity = var.subscription_id_connectivity
 }
 
 # Management 
 module "management" {
   source = "./modules/management"
 
-  root_id   = var.root_id
-  root_name = var.root_name
+  root_id                    = var.root_id
+  root_name                  = var.root_name
+  subscription_id_management = var.subscription_id_management
 }
 
 # Identity 
 module "identity" {
   source = "./modules/identity"
 
-  root_id   = var.root_id
-  root_name = var.root_name
+  root_id                  = var.root_id
+  root_name                = var.root_name
+  subscription_id_identity = var.subscription_id_identity
 }
