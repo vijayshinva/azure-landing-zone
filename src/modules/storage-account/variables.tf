@@ -1,3 +1,7 @@
+variable "enable_https_traffic_only" {
+  type = bool
+  default = true
+}
 variable "settings" {
   description = "Storage account configurations"
   type = object({
@@ -17,8 +21,8 @@ variable "settings" {
     tags                            = optional(map(string), null)
 
     network_rules = object({
-      default_action             = string
-      bypass                     = list(string)
+      default_action             = optional(string, "Deny")
+      bypass                     = optional(list(string),["AzureServices"])
       virtual_network_subnet_ids = list(string)
       ip_rules                   = list(string)
     })

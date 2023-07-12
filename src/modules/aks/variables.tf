@@ -11,6 +11,7 @@ variable "settings" {
     private_dns_zone_id           = optional(string, null)
     azure_policy_enabled          = optional(bool, true)
     public_network_access_enabled = optional(bool, false)
+    local_account_disabled        = optional(bool, true)
 
     default_node_pool = object({
       name                  = optional(string, "default")
@@ -37,6 +38,11 @@ variable "settings" {
       azure_rbac_enabled = optional(bool, true)
     }))
 
+    key_vault_secrets_provider = optional(object({
+      secret_rotation_enabled  = optional(bool, true)
+      secret_rotation_interval = optional(string, "2m") 
+    }),null)
+
     azurerm_kubernetes_cluster_node_pool = list(object({
       name                   = optional(string, "internal")
       vm_size                = optional(string, "Standard_DS2_v2")
@@ -53,7 +59,7 @@ variable "settings" {
       priority               = optional(string, null)
       enable_host_encryption = optional(bool, null)
       eviction_policy        = optional(string, null)
-      max_pods               = optional(number, 30)
+      max_pods               = optional(number, 50)
       os_disk_type           = optional(string, "Managed")
       os_disk_size_gb        = optional(number, 128)
       enable_node_public_ip  = optional(bool, false)

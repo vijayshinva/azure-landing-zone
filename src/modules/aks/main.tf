@@ -10,7 +10,15 @@ resource "azurerm_kubernetes_cluster" "this" {
   private_dns_zone_id           = var.settings.private_cluster_enabled ? var.settings.private_dns_zone_id : null
   azure_policy_enabled          = var.settings.azure_policy_enabled
   public_network_access_enabled = var.settings.public_network_access_enabled
+  local_account_disabled        = var.settings.local_account_disabled
 
+  dynamic "key_vault_secrets_provider" {
+     for_each = var.settings.key_vault_secrets_provider.secret_rotation_enabled == true ? [1] : []
+    content {
+      secret_rotation_enabled  = var.settings.key_vault_secrets_provider.secret_rotation_enabled
+      secret_rotation_interval = var.settings.key_vault_secrets_provider.secret_rotation_interval
+    }
+  }
   default_node_pool {
     name                  = var.settings.default_node_pool.name
     node_count            = var.settings.default_node_pool.node_count
@@ -34,12 +42,6 @@ resource "azurerm_kubernetes_cluster" "this" {
   azure_active_directory_role_based_access_control {
     managed            = var.settings.azure_active_directory_role_based_access_control.managed
     azure_rbac_enabled = var.settings.azure_active_directory_role_based_access_control.azure_rbac_enabled
-  }
-
-  lifecycle {
-    ignore_changes = [
-      default_node_pool
-    ]
   }
 }
 
