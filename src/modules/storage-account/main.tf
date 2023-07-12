@@ -7,7 +7,7 @@ resource "azurerm_storage_account" "this" {
   account_replication_type        = var.settings.account_replication_type
   allow_nested_items_to_be_public = var.settings.allow_nested_items_to_be_public
   edge_zone                       = var.settings.edge_zone
-  enable_https_traffic_only       = var.enable_https_traffic_only
+  enable_https_traffic_only       = var.settings.enable_https_traffic_only
   min_tls_version                 = var.settings.min_tls_version
   shared_access_key_enabled       = var.settings.shared_access_key_enabled
   tags                            = var.settings.tags

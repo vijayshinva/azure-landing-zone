@@ -4,6 +4,7 @@ locals {
       location            = "eastus"
       resource_group_name = "rg-test-demo"
       storageaccount_name = "stapppocim002"
+      enable_https_traffic_only=true
       network_rules = {
         default_action             = "Deny"
         bypass                     = ["Metrics", "Logging", "AzureServices"]
