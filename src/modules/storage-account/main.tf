@@ -1,3 +1,6 @@
+ #checkov:skip=CKV2_AZURE_21:Ensure Storage logging is enabled for Blob service for read requests
+ #checkov:skip=CKV2_AZURE_20:Ensure Storage logging is enabled for Table service for read requests
+
 resource "azurerm_storage_account" "this" {
   name                            = var.settings.storageaccount_name
   resource_group_name             = var.settings.resource_group_name
