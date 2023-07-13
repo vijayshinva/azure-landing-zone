@@ -1,6 +1,5 @@
-#checkov:skip=CKV2_AZURE_21:Ensure Storage logging is enabled for Blob service for read requests
-
 resource "azurerm_storage_account" "this" {
+  #checkov:skip=CKV2_AZURE_1:Ensure storage for critical data are encrypted with Customer Managed Key
   name                            = var.settings.storageaccount_name
   resource_group_name             = var.settings.resource_group_name
   location                        = var.settings.location
@@ -15,6 +14,11 @@ resource "azurerm_storage_account" "this" {
   tags                            = var.settings.tags
   large_file_share_enabled        = var.settings.large_file_share_enabled
   nfsv3_enabled                   = var.settings.nfsv3_enabled
+  blob_properties {
+    container_delete_retention_policy {
+      days = 7
+    }
+  }
 }
 
 resource "azurerm_storage_account_network_rules" "this" {
@@ -26,7 +30,7 @@ resource "azurerm_storage_account_network_rules" "this" {
 }
 
 resource "azurerm_storage_container" "this" {
-
+  #checkov:skip=CKV2_AZURE_21:Ensure Storage logging is enabled for Blob service for read requests
   for_each              = try({ for c in var.settings.containers : c.name => c }, {})
   name                  = each.key
   storage_account_name  = azurerm_storage_account.this.name

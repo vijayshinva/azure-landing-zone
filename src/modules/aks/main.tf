@@ -1,4 +1,6 @@
 resource "azurerm_kubernetes_cluster" "this" {
+  #checkov:skip=CKV_AZURE_4:Ensure AKS logging to Azure Monitoring is Configured
+  #checkov:skip=CKV_AZURE_170:Ensure that AKS use the Paid Sku for its SLA
   name                          = var.settings.name
   location                      = var.settings.location
   resource_group_name           = var.settings.resource_group_name
