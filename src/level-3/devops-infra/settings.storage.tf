@@ -1,9 +1,9 @@
 locals {
   configure_storage_resources = {
     settings = {
-      location                  = "eastus"
-      resource_group_name       = "rg-test-demo"
-      storageaccount_name       = "stapppocim002"
+      location            = "eastus"
+      resource_group_name = "rg-test-demo"
+      storageaccount_name = "stapppocim002"
       network_rules = {
         default_action             = "Deny"
         bypass                     = ["Metrics", "Logging", "AzureServices"]
