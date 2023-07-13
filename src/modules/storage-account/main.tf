@@ -1,4 +1,3 @@
-# Test case for check skip via comment
 #checkov:skip=CKV2_AZURE_21:Ensure Storage logging is enabled for Blob service for read requests
 
 resource "azurerm_storage_account" "this" {
