@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   network_profile {
-    network_plugin    = var.settings.network_profile.network_plugin
+    network_plugin    = "azure"
     load_balancer_sku = var.settings.network_profile.load_balancer_sku
     service_cidr      = var.settings.network_profile.service_cidr
     dns_service_ip    = var.settings.network_profile.dns_service_ip
