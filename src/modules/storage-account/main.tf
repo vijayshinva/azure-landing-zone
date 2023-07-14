@@ -15,6 +15,7 @@ resource "azurerm_storage_account" "this" {
   tags                            = var.settings.tags
   large_file_share_enabled        = var.settings.large_file_share_enabled
   nfsv3_enabled                   = var.settings.nfsv3_enabled
+  public_network_access_enabled   = false
   blob_properties {
     container_delete_retention_policy {
       days = 7
@@ -26,7 +27,7 @@ resource "azurerm_storage_account_network_rules" "this" {
   storage_account_id         = azurerm_storage_account.this.id
   virtual_network_subnet_ids = var.settings.network_rules.virtual_network_subnet_ids
   default_action             = "Deny"
-  bypass                     = "AzureServices"
+  bypass                     = ["AzureServices"]
   ip_rules                   = var.settings.network_rules.ip_rules
 }
 

@@ -5,10 +5,8 @@ locals {
       resource_group_name = "rg-test-demo"
       storageaccount_name = "stapppocim002"
       network_rules = {
-        default_action             = "Deny"
-        bypass                     = ["Metrics", "Logging", "AzureServices"]
         virtual_network_subnet_ids = ["/subscriptions/825ffda7-6684-4e20-abd1-f41592222222/resourceGroups/rg-test-demo/providers/Microsoft.Network/virtualNetworks/vnet1/subnets/default"]
-        ip_rules                   = ["49.43.241.70"]
+        ip_rules                   = ["49.43.243.247"]
       }
       containers = [
         {
