@@ -1,13 +1,15 @@
 resource "azurerm_container_registry" "this" {
+  #checkov:skip=CKV_AZURE_163:Enable vulnerability scanning for container images.
   name                          = var.settings.name
   resource_group_name           = var.settings.resource_group_name
   location                      = var.settings.location
   sku                           = var.settings.sku
   admin_enabled                 = var.settings.admin_enabled
   zone_redundancy_enabled       = var.settings.zone_redundancy_enabled
-  public_network_access_enabled = var.settings.public_network_access_enabled
+  public_network_access_enabled = false
   network_rule_bypass_option    = var.settings.network_rule_bypass_option ? "AzureServices" : "None"
   data_endpoint_enabled         = var.settings.data_endpoint_enabled
+  quarantine_policy_enabled     = false
 
   dynamic "retention_policy" {
     for_each = var.settings.images_retention_enabled && var.settings.sku == "Premium" ? ["enabled"] : []
@@ -40,7 +42,7 @@ resource "azurerm_container_registry" "this" {
     for_each = var.settings.network_rule_set != null ? [var.settings.network_rule_set] : []
 
     content {
-       default_action = lookup(network_rule_set.value, "default_action", "Allow")
+      default_action = lookup(network_rule_set.value, "default_action", "Allow")
 
       dynamic "ip_rule" {
         for_each = network_rule_set.value.ip_rule

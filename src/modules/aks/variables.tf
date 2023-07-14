@@ -27,7 +27,6 @@ variable "settings" {
     }))
 
     network_profile = object({
-      network_plugin    = optional(string, "azure")
       load_balancer_sku = optional(string, "standard")
       service_cidr      = string
       dns_service_ip    = string

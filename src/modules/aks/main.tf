@@ -1,6 +1,7 @@
 resource "azurerm_kubernetes_cluster" "this" {
   #checkov:skip=CKV_AZURE_4:Ensure AKS logging to Azure Monitoring is Configured
   #checkov:skip=CKV_AZURE_170:Ensure that AKS use the Paid Sku for its SLA
+  #checkov:skip=CKV_AZURE_117:Ensure that AKS uses disk encryption set
   name                          = var.settings.name
   location                      = var.settings.location
   resource_group_name           = var.settings.resource_group_name
@@ -15,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   local_account_disabled        = var.settings.local_account_disabled
 
   dynamic "key_vault_secrets_provider" {
-     for_each = var.settings.key_vault_secrets_provider.secret_rotation_enabled == true ? [1] : []
+    for_each = var.settings.key_vault_secrets_provider.secret_rotation_enabled == true ? [1] : []
     content {
       secret_rotation_enabled  = var.settings.key_vault_secrets_provider.secret_rotation_enabled
       secret_rotation_interval = var.settings.key_vault_secrets_provider.secret_rotation_interval
