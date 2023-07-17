@@ -1,0 +1,12 @@
+<policies>
+    <inbound>
+        <set-header name="Forwarded" exists-action="override">
+            <value>@("proto=" + context.Request.OriginalUrl.Scheme + ";host=" + context.Request.OriginalUrl.Host + ";")</value>
+        </set-header>
+    </inbound>
+    <backend>
+        <forward-request />
+    </backend>
+    <outbound />
+    <on-error />
+</policies>
