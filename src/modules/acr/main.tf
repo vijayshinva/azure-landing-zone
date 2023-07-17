@@ -1,35 +1,33 @@
 resource "azurerm_container_registry" "this" {
-  #checkov:skip=CKV_AZURE_163:Enable vulnerability scanning for container images.
   name                          = var.settings.name
   resource_group_name           = var.settings.resource_group_name
   location                      = var.settings.location
   sku                           = var.settings.sku
   admin_enabled                 = var.settings.admin_enabled
-  zone_redundancy_enabled       = var.settings.zone_redundancy_enabled
+  zone_redundancy_enabled       = var.settings.sku == "Premium" ? var.settings.zone_redundancy_enabled : null
   public_network_access_enabled = false
   network_rule_bypass_option    = var.settings.network_rule_bypass_option ? "AzureServices" : "None"
-  data_endpoint_enabled         = var.settings.data_endpoint_enabled
-  quarantine_policy_enabled     = false
-
+  data_endpoint_enabled         = var.settings.sku == "Premium" ? var.settings.data_endpoint_enabled : null
+  quarantine_policy_enabled     = true
   dynamic "retention_policy" {
-    for_each = var.settings.images_retention_enabled && var.settings.sku == "Premium" ? ["enabled"] : []
+    for_each = var.settings.retention_policy.enabled && var.settings.sku == "Premium" ? ["enabled"] : []
 
     content {
-      enabled = var.settings.images_retention_enabled
-      days    = var.settings.images_retention_days
+      enabled = var.settings.retention_policy.enabled
+      days    = var.settings.retention_policy.days
     }
   }
 
   dynamic "trust_policy" {
-    for_each = var.settings.trust_policy_enabled && var.settings.sku == "Premium" ? ["enabled"] : []
+    for_each = var.settings.trust_policy && var.settings.sku == "Premium" ? ["enabled"] : []
 
     content {
-      enabled = var.settings.trust_policy_enabled
+      enabled = var.settings.trust_policy
     }
   }
 
   dynamic "georeplications" {
-    for_each = var.settings.georeplication_locations
+    for_each = var.settings.georeplications != null && var.settings.sku == "Premium" ? var.settings.georeplications : []
 
     content {
       location                  = georeplications.value.location
@@ -39,24 +37,25 @@ resource "azurerm_container_registry" "this" {
   }
 
   dynamic "network_rule_set" {
-    for_each = var.settings.network_rule_set != null ? [var.settings.network_rule_set] : []
+
+     for_each = var.settings.network_rule_set != null ? [var.settings.network_rule_set] : []
 
     content {
       default_action = lookup(network_rule_set.value, "default_action", "Allow")
 
       dynamic "ip_rule" {
-        for_each = network_rule_set.value.ip_rule
+        for_each = var.settings.network_rule_set.ip_range
         content {
           action   = "Allow"
-          ip_range = ip_rule.value.ip_range
+          ip_range = ip_rule.value
         }
       }
 
       dynamic "virtual_network" {
-        for_each = network_rule_set.value.virtual_network
+        for_each = var.settings.network_rule_set.subnet_id
         content {
           action    = "Allow"
-          subnet_id = virtual_network.value.subnet_id
+          subnet_id = virtual_network.value
         }
       }
     }
