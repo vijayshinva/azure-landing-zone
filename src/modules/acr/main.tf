@@ -35,7 +35,7 @@ resource "azurerm_container_registry" "this" {
 
     content {
       location                  = georeplications.value.location
-      zone_redundancy_enabled   = true
+      zone_redundancy_enabled   = georeplications.value.zone_redundancy_enabled
       regional_endpoint_enabled = try(georeplications.value.regional_endpoint_enabled, null)
     }
   }
