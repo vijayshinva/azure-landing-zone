@@ -2,7 +2,6 @@ resource "azurerm_container_registry" "this" {
   #checkov:skip=CKV_AZURE_163:Enable vulnerability scanning for container images
   #checkov:skip=CKV_AZURE_165:Ensure geo-replicated container registries to match multi-region container deployments
   #checkov:skip=CKV_AZURE_166:Ensure container image quarantine, scan, and mark images verified
-
   name                          = var.settings.name
   resource_group_name           = var.settings.resource_group_name
   location                      = var.settings.location
@@ -36,7 +35,7 @@ resource "azurerm_container_registry" "this" {
 
     content {
       location                  = georeplications.value.location
-      zone_redundancy_enabled   = georeplications.value.zone_redundancy_enabled
+      zone_redundancy_enabled   = true
       regional_endpoint_enabled = try(georeplications.value.regional_endpoint_enabled, null)
     }
   }
