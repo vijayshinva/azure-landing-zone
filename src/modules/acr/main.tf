@@ -8,7 +8,8 @@ resource "azurerm_container_registry" "this" {
   public_network_access_enabled = false
   network_rule_bypass_option    = var.settings.network_rule_bypass_option ? "AzureServices" : "None"
   data_endpoint_enabled         = var.settings.sku == "Premium" ? var.settings.data_endpoint_enabled : null
-  quarantine_policy_enabled     = true
+  quarantine_policy_enabled     = var.settings.sku == "Premium" ? true : null
+  
   dynamic "retention_policy" {
     for_each = var.settings.retention_policy.enabled && var.settings.sku == "Premium" ? ["enabled"] : []
 
