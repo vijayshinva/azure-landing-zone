@@ -1,6 +1,6 @@
 resource "azurerm_container_registry" "this" {
   #checkov:skip=CKV_AZURE_163:Enable vulnerability scanning for container images
-  #checkov:skip=Ensure geo-replicated container registries to match multi-region container deployments
+  #checkov:skip=CKV_AZURE_165:Ensure geo-replicated container registries to match multi-region container deployments
 
   name                          = var.settings.name
   resource_group_name           = var.settings.resource_group_name
