@@ -13,7 +13,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   private_dns_zone_id           = var.settings.private_cluster_enabled ? var.settings.private_dns_zone_id : null
   azure_policy_enabled          = var.settings.azure_policy_enabled
   public_network_access_enabled = var.settings.public_network_access_enabled
-  local_account_disabled        = var.settings.local_account_disabled
+  local_account_disabled        = true
   automatic_channel_upgrade     = "stable"
 
   dynamic "key_vault_secrets_provider" {
@@ -67,7 +67,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
   node_count             = each.value.node_count
   min_count              = each.value.enable_auto_scaling ? each.value.min_count : null
   max_count              = each.value.enable_auto_scaling ? var.settings.azurerm_kubernetes_cluster_node_pool.max_count : null
-  max_pods               = each.value.max_pods
+  max_pods               = 50
   node_labels            = each.value.node_labels
   node_taints            = each.value.node_taints
   enable_node_public_ip  = each.value.enable_node_public_ip
