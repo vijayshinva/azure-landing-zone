@@ -68,7 +68,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
   node_count             = each.value.node_count
   min_count              = each.value.enable_auto_scaling ? each.value.min_count : null
   max_count              = each.value.enable_auto_scaling ? var.settings.azurerm_kubernetes_cluster_node_pool.max_count : null
-  max_pods               = each.value.max_pods
+  max_pods               = 50
   node_labels            = each.value.node_labels
   node_taints            = each.value.node_taints
   enable_node_public_ip  = each.value.enable_node_public_ip
