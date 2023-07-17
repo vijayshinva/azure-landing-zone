@@ -30,6 +30,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     enable_auto_scaling   = var.settings.default_node_pool.enable_auto_scaling
     enable_node_public_ip = var.settings.default_node_pool.enable_node_public_ip
     vnet_subnet_id        = var.settings.default_node_pool.vnet_subnet_id
+    max_pods              = 50
   }
 
   identity {
