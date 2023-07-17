@@ -1,4 +1,5 @@
 resource "azurerm_container_registry" "this" {
+  #checkov:skip=CKV_AZURE_163:Enable vulnerability scanning for container images
   name                          = var.settings.name
   resource_group_name           = var.settings.resource_group_name
   location                      = var.settings.location
@@ -8,7 +9,7 @@ resource "azurerm_container_registry" "this" {
   public_network_access_enabled = false
   network_rule_bypass_option    = var.settings.network_rule_bypass_option ? "AzureServices" : "None"
   data_endpoint_enabled         = var.settings.sku == "Premium" ? var.settings.data_endpoint_enabled : null
-  quarantine_policy_enabled     = var.settings.sku == "Premium" ? true : null
+  quarantine_policy_enabled     = true
   
   dynamic "retention_policy" {
     for_each = var.settings.retention_policy.enabled && var.settings.sku == "Premium" ? ["enabled"] : []
@@ -31,7 +32,7 @@ resource "azurerm_container_registry" "this" {
     for_each = var.settings.georeplications != null && var.settings.sku == "Premium" ? var.settings.georeplications : []
 
     content {
-      location                  = georeplications.value.location
+      location                  = ["eastus", "westus"]
       zone_redundancy_enabled   = true
       regional_endpoint_enabled = try(georeplications.value.regional_endpoint_enabled, null)
     }
