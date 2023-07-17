@@ -4,7 +4,7 @@ variable "settings" {
     location                   = string
     resource_group_name        = string
     name                       = string
-    sku                        = optional(string, "Standard")
+    sku                        = optional(string, "Premium")
     admin_enabled              = optional(bool, false)
     zone_redundancy_enabled    = optional(bool, true)
     network_rule_bypass_option = optional(bool, true)
