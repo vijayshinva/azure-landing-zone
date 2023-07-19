@@ -22,7 +22,7 @@ resource "azurerm_mysql_flexible_server" "this" {
   zone                         = var.settings.zone
   sku_name                     = var.settings.sku_name
   backup_retention_days        = var.settings.backup_retention_days
-  geo_redundant_backup_enabled = var.settings.geo_redundant_backup_enabled
+  geo_redundant_backup_enabled = true
   administrator_login          = var.settings.administrator_login
   administrator_password       = coalesce(var.settings.administrator_password, random_password.this.result )
 
