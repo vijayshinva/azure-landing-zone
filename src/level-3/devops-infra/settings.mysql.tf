@@ -4,8 +4,8 @@ locals {
       location            = "eastus"
       resource_group_name = "rg-poc-tfmodule"
       name                = "mysqlimxyzserver"
-      delegated_subnet_id = "/subscriptions/5cb3db32-a59f-4aa5-9378-623c75ee0d8d/resourceGroups/rg-poc-tfmodule/providers/Microsoft.Network/virtualNetworks/demo-vnet1/subnets/mysql"
-      private_dns_zone_id = "/subscriptions/5cb3db32-a59f-4aa5-9378-623c75ee0d8d/resourceGroups/rg-poc-tfmodule/providers/Microsoft.Network/privateDnsZones/privatelink.mysql.database.azure.com"
+      delegated_subnet_id = "/subscriptions/5cb3db32-a59f-4aa5-9378-62222222222222/resourceGroups/rg-poc-tfmodule/providers/Microsoft.Network/virtualNetworks/demo-vnet1/subnets/mysql"
+      private_dns_zone_id = "/subscriptions/5cb3db32-a59f-4aa5-9378-62222222222222/resourceGroups/rg-poc-tfmodule/providers/Microsoft.Network/privateDnsZones/privatelink.mysql.database.azure.com"
 
       authentication = {
         active_directory_auth_enabled = true
