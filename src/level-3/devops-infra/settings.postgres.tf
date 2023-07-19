@@ -34,7 +34,7 @@ locals {
 
       tags = {
         costcenter = "001007"
-        createdat = timestamp()
+        createdat  = timestamp()
       }
     }
   }
