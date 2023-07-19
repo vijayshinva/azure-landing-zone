@@ -30,12 +30,12 @@ variable "settings" {
       charset   = optional(string, "utf8")
     }))
 
-    default_tags = optional(map(string) ,{
-        managedBy = "terraform"
+    default_tags = optional(map(string), {
+      managedBy = "terraform"
     })
 
     tags = optional(map(string), {
-       env = "dev"
+      env = "dev"
     })
   })
 }
