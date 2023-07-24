@@ -43,3 +43,8 @@ module "mysql_flexible" {
   source   = "../../modules/mysql-flexible"
   settings = local.configure_mysql_resources.settings
 }
+
+module "mssql" {
+  source   = "../../modules/mssql"
+  settings = local.configure_mssql_resources.settings
+}
