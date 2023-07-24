@@ -1,9 +1,3 @@
-resource "azurerm_user_assigned_identity" "this" {
-  name                = "${var.settings.name}-UAT1"
-  location            = var.settings.location
-  resource_group_name = var.settings.resource_group_name
-}
-
 locals {
   configure_managed_identity = {
     settings = {
@@ -25,7 +19,7 @@ resource "azurerm_mssql_server" "this" {
   location                             = var.settings.location
   version                              = var.settings.version
   connection_policy                    = var.settings.connection_policy
-  minimum_tls_version                  = "1.2"
+  minimum_tls_version                  = var.settings.minimum_tls_version
   public_network_access_enabled        = false
   outbound_network_restriction_enabled = false
 
@@ -41,12 +35,7 @@ resource "azurerm_mssql_server" "this" {
 
   tags = merge(var.settings.default_tags, var.settings.tags)
 
-  depends_on = [azurerm_user_assigned_identity.this]
-}
-
-resource "azurerm_mssql_server_extended_auditing_policy" "this" {
-  server_id         = azurerm_mssql_server.this.id
-  retention_in_days = 91
+  depends_on = [module.managed-identity]
 }
 
 resource "azurerm_mssql_elasticpool" "this" {

@@ -4,7 +4,7 @@ locals {
       location            = "westus"
       resource_group_name = "rg-poc-tfmodule"
       name                = "mssqlimxyzserver"
-
+  
       elasticpool = {
         name = "mssqlimxyzserver"
 

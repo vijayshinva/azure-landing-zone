@@ -48,3 +48,8 @@ module "mssql" {
   source   = "../../modules/mssql"
   settings = local.configure_mssql_resources.settings
 }
+
+module "managed-identity" {
+  source   = "../managed-identity"
+  settings = local.configure_managed_identity.settings
+}
