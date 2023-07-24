@@ -25,7 +25,7 @@ resource "azurerm_mssql_server" "this" {
   location                             = var.settings.location
   version                              = var.settings.version
   connection_policy                    = var.settings.connection_policy
-  minimum_tls_version                  = var.settings.minimum_tls_version
+  minimum_tls_version                  = "1.2"
   public_network_access_enabled        = false
   outbound_network_restriction_enabled = false
 
@@ -42,6 +42,11 @@ resource "azurerm_mssql_server" "this" {
   tags = merge(var.settings.default_tags, var.settings.tags)
 
   depends_on = [azurerm_user_assigned_identity.this]
+}
+
+resource "azurerm_mssql_server_extended_auditing_policy" "this" {
+  server_id         = azurerm_mssql_server.this.id
+  retention_in_days = 91
 }
 
 resource "azurerm_mssql_elasticpool" "this" {
