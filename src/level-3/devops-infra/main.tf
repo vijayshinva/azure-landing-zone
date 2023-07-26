@@ -53,3 +53,8 @@ module "managed-identity" {
   source   = "../managed-identity"
   settings = local.configure_managed_identity.settings
 }
+
+module "private-endpoint" {
+  source   = "../private-endpoint"
+  settings = local.configure_private-endpoint_resources.settings
+}
