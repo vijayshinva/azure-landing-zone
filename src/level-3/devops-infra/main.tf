@@ -58,3 +58,8 @@ module "private-endpoint" {
   source   = "../private-endpoint"
   settings = local.configure_private-endpoint_resources.settings
 }
+
+module "bastion" {
+  source   = "../bastion"
+  settings = local.configure_bastion_resources.settings
+}

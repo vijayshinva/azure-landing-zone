@@ -15,7 +15,7 @@ resource "azurerm_key_vault" "this" {
   enabled_for_deployment          = true
   enable_rbac_authorization       = true
 
-   network_acls {
+  network_acls {
     bypass                     = "AzureServices"
     default_action             = var.settings.network_rules.default_action
     ip_rules                   = var.settings.network_rules.ip_rules

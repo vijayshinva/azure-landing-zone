@@ -3,7 +3,7 @@ resource "azurerm_storage_account" "this" {
   #checkov:skip=CKV_AZURE_206:Ensure that Storage Accounts use replication
   #checkov:skip=CKV2_AZURE_38:Ensure soft-delete is enabled on Azure storage account
   #checkov:skip=CKV2_AZURE_33:Ensure storage account is configured with private endpoint
-  
+
   name                            = var.settings.storageaccount_name
   resource_group_name             = var.settings.resource_group_name
   location                        = var.settings.location
