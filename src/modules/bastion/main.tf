@@ -19,6 +19,7 @@ resource "azurerm_bastion_host" "this" {
   resource_group_name    = var.settings.resource_group_name
   copy_paste_enabled     = var.settings.copy_paste_enabled
   file_copy_enabled      = var.settings.file_copy_enabled
+  sku                    = var.settings.sku
   ip_connect_enabled     = var.settings.ip_connect_enabled
   shareable_link_enabled = var.settings.shareable_link_enabled
   tunneling_enabled      = var.settings.tunneling_enabled
