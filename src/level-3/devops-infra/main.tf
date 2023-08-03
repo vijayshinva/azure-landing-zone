@@ -63,3 +63,8 @@ module "bastion" {
   source   = "../bastion"
   settings = local.configure_bastion_resources.settings
 }
+
+module "cosmosdb" {
+  source   = "../cosmosdb"
+  settings = local.configure_cosmosdb_resources.settings
+}
