@@ -33,7 +33,7 @@ variable "settings" {
 
     virtual_network_rule = optional(list(object({
       id                                   = string
-      ignore_missing_vnet_service_endpoint = bool
+      ignore_missing_vnet_service_endpoint = optional(bool, false)
     })), [])
 
     backup = optional(object({
