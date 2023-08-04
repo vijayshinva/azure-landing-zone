@@ -1,17 +1,16 @@
 variable "settings" {
   description = "Postgres configurations"
   type = object({
-    name                         = string
-    location                     = string
-    resource_group_name          = string
-    version                      = optional(string, "12")
-    delegated_subnet_id          = string
-    private_dns_zone_id          = optional(string, null)
-    zone                         = optional(string, "2")
-    storage_mb                   = optional(number, 32768)
-    sku_name                     = optional(string, "GP_Standard_D4s_v3")
-    backup_retention_days        = optional(number, 7)
-    geo_redundant_backup_enabled = optional(bool, true)
+    name                  = string
+    location              = string
+    resource_group_name   = string
+    version               = optional(string, "12")
+    delegated_subnet_id   = string
+    private_dns_zone_id   = optional(string, null)
+    zone                  = optional(string, "2")
+    storage_mb            = optional(number, 32768)
+    sku_name              = optional(string, "GP_Standard_D4s_v3")
+    backup_retention_days = optional(number, 7)
 
     authentication = object({
       active_directory_auth_enabled = optional(bool, true)

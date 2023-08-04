@@ -12,7 +12,7 @@ resource "azurerm_container_registry" "this" {
   network_rule_bypass_option    = var.settings.network_rule_bypass_option ? "AzureServices" : "None"
   data_endpoint_enabled         = var.settings.sku == "Premium" ? var.settings.data_endpoint_enabled : null
   quarantine_policy_enabled     = var.settings.sku == "Premium" ? true : null
-  
+
   dynamic "retention_policy" {
     for_each = var.settings.retention_policy.enabled && var.settings.sku == "Premium" ? ["enabled"] : []
 
@@ -42,7 +42,7 @@ resource "azurerm_container_registry" "this" {
 
   dynamic "network_rule_set" {
 
-     for_each = var.settings.network_rule_set != null ? [var.settings.network_rule_set] : []
+    for_each = var.settings.network_rule_set != null ? [var.settings.network_rule_set] : []
 
     content {
       default_action = lookup(network_rule_set.value, "default_action", "Allow")

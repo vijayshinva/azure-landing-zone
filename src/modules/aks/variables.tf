@@ -38,8 +38,8 @@ variable "settings" {
 
     key_vault_secrets_provider = optional(object({
       secret_rotation_enabled  = optional(bool, true)
-      secret_rotation_interval = optional(string, "2m") 
-    }),null)
+      secret_rotation_interval = optional(string, "2m")
+    }), null)
 
     azurerm_kubernetes_cluster_node_pool = list(object({
       name                   = optional(string, "internal")

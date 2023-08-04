@@ -43,3 +43,28 @@ module "mysql_flexible" {
   source   = "../../modules/mysql-flexible"
   settings = local.configure_mysql_resources.settings
 }
+
+module "mssql" {
+  source   = "../../modules/mssql"
+  settings = local.configure_mssql_resources.settings
+}
+
+module "managed-identity" {
+  source   = "../managed-identity"
+  settings = local.configure_managed_identity.settings
+}
+
+module "private-endpoint" {
+  source   = "../private-endpoint"
+  settings = local.configure_private-endpoint_resources.settings
+}
+
+module "bastion" {
+  source   = "../bastion"
+  settings = local.configure_bastion_resources.settings
+}
+
+module "cosmosdb" {
+  source   = "../cosmosdb"
+  settings = local.configure_cosmosdb_resources.settings
+}

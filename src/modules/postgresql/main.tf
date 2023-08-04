@@ -12,7 +12,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   sku_name            = var.settings.sku_name
 
   backup_retention_days        = var.settings.backup_retention_days
-  geo_redundant_backup_enabled = var.settings.geo_redundant_backup_enabled
+  geo_redundant_backup_enabled = true
 
   authentication {
     active_directory_auth_enabled = var.settings.authentication.active_directory_auth_enabled

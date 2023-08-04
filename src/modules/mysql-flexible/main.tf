@@ -1,9 +1,18 @@
 data "azurerm_client_config" "current" {}
 
-resource "azurerm_user_assigned_identity" "this" {
-  name                = "${var.settings.name}-uai"
-  resource_group_name = var.settings.resource_group_name
-  location            = var.settings.location
+locals {
+  configure_managed_identity = {
+    settings = {
+      name                = var.settings.name
+      resource_group_name = var.settings.resource_group_name
+      location            = var.settings.location
+    }
+  }
+}
+
+module "managed-identity" {
+  source   = "../managed-identity"
+  settings = local.configure_managed_identity.settings
 }
 
 resource "random_password" "this" {
@@ -22,13 +31,13 @@ resource "azurerm_mysql_flexible_server" "this" {
   zone                         = var.settings.zone
   sku_name                     = var.settings.sku_name
   backup_retention_days        = var.settings.backup_retention_days
-  geo_redundant_backup_enabled = true
+  geo_redundant_backup_enabled = var.settings.geo_redundant_backup_enabled
   administrator_login          = var.settings.administrator_login
-  administrator_password       = coalesce(var.settings.administrator_password, random_password.this.result )
+  administrator_password       = coalesce(var.settings.administrator_password, random_password.this.result)
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.this.id]
+    identity_ids = [module.managed-identity.id]
   }
 
   dynamic "high_availability" {
@@ -40,7 +49,6 @@ resource "azurerm_mysql_flexible_server" "this" {
     }
   }
 
-
   dynamic "storage" {
     for_each = var.settings.storage != null ? [var.settings.storage] : []
 
@@ -51,13 +59,13 @@ resource "azurerm_mysql_flexible_server" "this" {
     }
   }
 
-  tags = merge(var.settings.default_tags, var.settings.tags)
-
+  tags       = merge(var.settings.default_tags, var.settings.tags)
+  depends_on = [module.managed-identity]
 }
 
 resource "azurerm_mysql_flexible_server_active_directory_administrator" "this" {
   server_id   = azurerm_mysql_flexible_server.this.id
-  identity_id = azurerm_user_assigned_identity.this.id
+  identity_id = module.managed-identity.id
   login       = "sqladmin"
   object_id   = data.azurerm_client_config.current.client_id
   tenant_id   = data.azurerm_client_config.current.tenant_id
