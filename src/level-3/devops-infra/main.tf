@@ -33,3 +33,13 @@ module "storage_account" {
   source   = "../../modules/storage-account"
   settings = local.configure_storage_resources.settings
 }
+
+module "postgres_flexible" {
+  source   = "../../modules/postgresql"
+  settings = local.configure_postgres_resources.settings
+}
+
+module "mysql_flexible" {
+  source   = "../../modules/mysql-flexible"
+  settings = local.configure_mysql_resources.settings
+}
